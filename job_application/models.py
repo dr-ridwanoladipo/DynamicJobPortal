@@ -8,5 +8,5 @@ class Form(models.Model):
     date = models.DateField()
     occupation = models.CharField(max_length=80)
 
-    def __init__(self):
+    def __str__(self):  # Use __str__ instead of __init__
         return f"{self.first_name} {self.last_name}"
