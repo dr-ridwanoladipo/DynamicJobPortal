@@ -6,30 +6,47 @@ from django.core.mail import EmailMessage
 
 
 def index(request):
+    """
+    Handle the main job application form submission.
+
+    If a POST request is received, process the form data,
+    save it to the database, and send a confirmation email.
+    """
     if request.method == "POST":
         form = ApplicationForm(request.POST)
         if form.is_valid():
+            # Extract cleaned data from the form
             first_name = form.cleaned_data["first_name"]
             last_name = form.cleaned_data["last_name"]
             email = form.cleaned_data["email"]
             date = form.cleaned_data["date"]
             occupation = form.cleaned_data["occupation"]
 
-            Form.objects.create(first_name=first_name, last_name=last_name, email=email,
-                                date=date, occupation=occupation)
+            # Create a new Form object and save it to the database
+            Form.objects.create(
+                first_name=first_name,
+                last_name=last_name,
+                email=email,
+                date=date,
+                occupation=occupation
+            )
 
+            # Prepare and send confirmation email
             message_body = f"A new job application was submitted. Thank you, \n{first_name} {last_name}"
             email_message = EmailMessage("Form submission confirmation", message_body, to=[email])
             email_message.send()
 
+            # Display success message to the user
             messages.success(request, "Form submitted successfully!")
 
     return render(request, 'index.html')
 
 
 def about(request):
+    """Render the about page."""
     return render(request, "about.html")
 
 
 def contact(request):
+    """Render the contact page."""
     return render(request, "contact.html")
